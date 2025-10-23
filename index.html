@@ -2,67 +2,29 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>Brainrot Upgrade — Halloween Update</title>
+  <title>Brainrot Upgrade — Mutation Wipe</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    :root {
-      --bg: #fdfaf5;
-      --accent: #d35400;
-      --rare: #4b9cd3;
-      --legendary: #f39c12;
-      --mythic: #9b59b6;
-      --secret: #2c3e50;
-      --mutated: #e74c3c;
-      --taco: #d35400;
-      --halloween: #e67e22;
-      --btn-main: linear-gradient(to right, #ffb347, #ffcc33);
-      --btn-alt: linear-gradient(to right, #a29bfe, #6c5ce7);
-      --btn-green: linear-gradient(to right, #55efc4, #00b894);
-      --btn-orange: linear-gradient(to right, #fab1a0, #e17055);
-    }
-
     body {
       font-family: 'Segoe UI', sans-serif;
-      background: var(--bg);
+      background: #fffaf3;
       color: #333;
       margin: 0;
       padding: 0;
       text-align: center;
-    }
-
-    #loading-screen {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: #1a1a1a;
-      color: #fff;
-      font-size: 36px;
-      font-weight: bold;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-      animation: fadeOut 1s ease 2s forwards;
-    }
-
-    @keyframes fadeOut {
-      to { opacity: 0; visibility: hidden; }
+      overflow-x: hidden;
     }
 
     h1 {
       font-size: 42px;
-      color: var(--accent);
+      color: #d35400;
       margin: 20px 0 0;
-      text-shadow: 2px 2px #f5cba7;
     }
 
     #subtitle {
       font-size: 20px;
-      color: #e67e22;
+      color: #f1c40f;
       margin-bottom: 20px;
-      letter-spacing: 1px;
       font-weight: bold;
     }
 
@@ -73,163 +35,190 @@
       margin-bottom: 10px;
     }
 
-    #rebirth-button {
-      background: var(--btn-alt);
-      color: white;
-      font-size: 16px;
-      padding: 10px 18px;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-      transition: transform 0.2s ease, box-shadow 0.3s ease;
+    #active-events {
+      margin-bottom: 20px;
     }
 
-    #rebirth-button:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 12px rgba(108,92,231,0.4);
+    #active-events h3 {
+      margin: 0;
+      font-size: 18px;
+      color: #e67e22;
+    }
+
+    #event-status span {
+      margin: 0 6px;
+      font-weight: bold;
+      font-size: 16px;
     }
 
     #event-timers {
-      font-size: 14px;
-      color: #c0392b;
-      margin: 10px 0;
+      font-size: 16px;
+      margin-bottom: 20px;
     }
 
-    #active-events {
-      font-size: 15px;
-      margin-bottom: 10px;
+    .event-timer {
+      margin: 4px 0;
       color: #c0392b;
     }
 
-    #slot-count {
+    #fullscreen-event {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0,0,0,0.7);
+      color: #fff;
+      font-size: 48px;
       font-weight: bold;
-      color: var(--accent);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
     }
 
-    #base {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 16px;
-      padding: 10px 20px;
-      max-width: 1200px;
-      margin: 0 auto;
+    #taco-rain {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 9998;
+    }
+
+    .taco {
+      position: absolute;
+      font-size: 32px;
+      animation: fall 3s linear infinite;
+    }
+
+    @keyframes fall {
+      0% { top: -50px; opacity: 1; }
+      100% { top: 100vh; opacity: 0; }
+    }
+
+    button {
+      padding: 8px 16px;
+      margin: 6px;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+    }
+
+    .action-button {
+      background: linear-gradient(to right, #f39c12, #e67e22);
+      color: white;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+
+    .sell-button {
+      background: linear-gradient(to right, #e74c3c, #c0392b);
+    }
+
+    .collect-button {
+      background: linear-gradient(to right, #2ecc71, #27ae60);
     }
 
     .slot {
-      background: white;
-      border: 2px solid #ccc;
-      border-radius: 14px;
-      padding: 14px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-      font-size: 15px;
-      transition: transform 0.3s ease;
-    }
-
-    .slot:hover {
-      transform: scale(1.03);
-    }
-
-    .common { border-color: #aaa; background: linear-gradient(to bottom, #fff, #f7f7f7); }
-    .rare { border-color: var(--rare); background: linear-gradient(to bottom, #eaf4ff, #d6eaff); }
-    .legendary { border-color: var(--legendary); background: linear-gradient(to bottom, #fff5d6, #ffe9a8); }
-    .mythic { border-color: var(--mythic); background: linear-gradient(to bottom, #f3e6ff, #e0cfff); }
-    .secret { border-color: var(--secret); background: linear-gradient(to bottom, #fdfdfd, #eaeaea); }
-
-    .mutated { box-shadow: 0 0 12px rgba(231,76,60,0.4); }
-    .taco { box-shadow: 0 0 12px rgba(211,84,0,0.3); }
-    .halloween { box-shadow: 0 0 12px rgba(230,126,34,0.4); }
-
-    .slot button {
-      margin-top: 8px;
-      padding: 8px 12px;
-      font-size: 14px;
-      background: var(--btn-main);
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      transition: transform 0.2s ease;
-    }
-
-    .slot button:hover {
-      transform: scale(1.05);
+      border: 2px solid #ddd;
+      border-radius: 12px;
+      padding: 12px;
+      margin: 8px;
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
 
     #conveyor {
       position: relative;
-      height: 260px;
+      height: 160px;
       overflow: hidden;
-      background: linear-gradient(to right, #fdf6f0, #f7e9d7);
-      border-top: 3px dashed #ccc;
-      border-bottom: 3px dashed #ccc;
-      margin: 20px 0;
+      margin: 20px auto;
+      width: 100%;
+      max-width: 400px;
+      border: 2px dashed #ccc;
+      border-radius: 12px;
+      background: #fefefe;
     }
 
     .unit {
       position: absolute;
-      top: 20px;
-      width: 300px;
-      animation: driveAcross 5s linear forwards;
-      border: 2px solid #ccc;
-      padding: 12px;
+      left: -100%;
+      width: 100%;
+      padding: 16px;
+      box-sizing: border-box;
       background: #fff;
       border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      transition: transform 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      animation: slideInSlow 7s linear forwards;
     }
 
-    .unit:hover {
-      transform: scale(1.05);
-    }
-
-    @keyframes driveAcross {
-      0% { left: -320px; opacity: 0; }
+    @keyframes slideInSlow {
+      0% { left: -100%; opacity: 0; }
       10% { opacity: 1; }
+      50% { left: 0%; }
       90% { opacity: 1; }
-      100% { left: 100vw; opacity: 0; }
-    }
-
-    #message-log {
-      margin-top: 20px;
-      font-size: 16px;
-      color: #2c3e50;
+      100% { left: 100%; opacity: 0; }
     }
   </style>
 </head>
 <body>
 
-<!-- Загрузочный экран -->
-<div id="loading-screen">
-  <div>BRAINROT UPGRADE 🎃</div>
-  <div style="margin-top: 10px;">LOADING...</div>
-</div>
+<h1>🧠 Brainrot Upgrade</h1>
+<div id="subtitle">Mutation Edition — глобальный вайп и новый старт</div>
 
-<!-- Заголовок -->
-<h1>BRAINROT UPGRADE</h1>
-<div id="subtitle">HALLOWEEN UPDATE 🎃</div>
 <div id="balance">Баланс: ₽0</div>
-<button id="rebirth-button" onclick="showRebirthPopup()">🔁 Перерождение</button>
+
+<div id="active-events">
+  <h3>⚡ Активные события:</h3>
+  <div id="event-status">
+    <span id="fire-status">🔥 Fire: OFF</span> |
+    <span id="brainrot-status">🧠 Time Brainrot: OFF</span> |
+    <span id="taco-status">🌮 Taco: OFF</span> |
+    <span id="halloween-status">🎃 Halloween: OFF</span>
+  </div>
+</div>
 
 <div id="event-timers">
-  <div id="timebrainrot-timer"></div>
-  <div id="event-timer"></div>
-  <div id="taco-timer"></div>
-  <div id="halloween-timer"></div>
+  <div class="event-timer">🔥 Fire Event через <span id="fire-timer">450</span> сек</div>
+  <div class="event-timer">🧠 Time Brainrot через <span id="brainrot-timer">400</span> сек</div>
+  <div class="event-timer">🌮 Taco Event через <span id="taco-timer">800</span> сек</div>
+  <div class="event-timer">🎃 Halloween Event через <span id="halloween-timer">1500</span> сек</div>
 </div>
 
-<div id="active-events">Активные события: —</div>
+<div id="fullscreen-event"></div>
+<div id="taco-rain"></div>
 
+<script>
+// 💣 Глобальный вайп: удаляем все старые аккаунты и создаём новый localStorage
+if (!localStorage.getItem("brainrotWipe_v6")) {
+  localStorage.clear();
+  localStorage.setItem("brainrotWipe_v6", "true");
+}
+
+// 💬 Сокращение чисел: 1500 → 1.5K, 1500000 → 1.5M, 1500000000 → 1.5B
+function formatMoney(value) {
+  if (value >= 1e9) return (value / 1e9).toFixed(1) + "B";
+  if (value >= 1e6) return (value / 1e6).toFixed(1) + "M";
+  if (value >= 1e3) return (value / 1e3).toFixed(1) + "K";
+  return Math.floor(value);
+}
+</script>
+<!-- 🚀 База -->
 <h2>🚀 База (<span id="slot-count">8</span> слотов)</h2>
-<div id="base"></div>
+<div id="base" style="display:flex; flex-wrap:wrap; justify-content:center; gap:12px;"></div>
 
-<h2>⚙️ Конвейер</h2>
-<div id="conveyor"></div>
+<!-- 📦 Конвейер -->
+<h2>📦 Конвейер</h2>
+<div id="conveyor" style="margin-bottom:20px;"></div>
 
-<div id="message-log"></div>
-
-<!-- Popup подтверждения продажи -->
+<!-- ❗ Подтверждение продажи -->
 <div id="sell-confirm-overlay" style="display:none;
   position:fixed;
   top:0; left:0;
@@ -250,277 +239,282 @@
   text-align:center;">
   <h3>❗ Вы точно хотите продать брейнрота?</h3>
   <div id="sell-unit-name" style="font-size:20px; font-weight:bold; margin:10px 0;"></div>
-  <button style="background:var(--btn-orange);" onclick="confirmSell()">✅ Продать</button>
-  <button style="background:var(--btn-green);" onclick="cancelSell()">❌ Отмена</button>
+  <button class="action-button sell-button" onclick="confirmSell()">✅ Продать</button>
+  <button class="action-button collect-button" onclick="cancelSell()">❌ Отмена</button>
 </div>
 
-<!-- Админка -->
-<h2>🛠 Админ-панель</h2>
+<!-- 🛠 Admin Panel -->
+<h2>🛠 Admin Panel</h2>
 <div id="admin-panel">
   <input type="password" id="admin-password" placeholder="Пароль" style="padding:6px; border-radius:6px;">
-  <button style="background:var(--btn-green);" onclick="unlockAdmin()">Войти</button>
+  <button class="action-button" onclick="unlockAdmin()">Войти</button>
   <div id="admin-controls" style="display:none;">
     <div class="admin-section">
-      <h3>💰 Экономика</h3>
-      <button onclick="giveMoney()">Выдать ₽5000</button>
-      <button onclick="tryRebirth()">Принудительное перерождение</button>
-    </div>
-    <div class="admin-section">
-      <h3>🔥 События</h3>
-      <button onclick="startFireEvent()">Запустить Fire</button>
-      <button onclick="startTimeBrainrotEvent()">Запустить Time Brainrot</button>
-      <button onclick="startTacoEvent()">Запустить Taco</button>
-      <button onclick="startHalloweenEvent()">Запустить Halloween</button>
-    </div>
-    <div class="admin-section">
-      <h3>🎲 Спавн юнита</h3>
-      <button onclick="rollConveyorUnit()">Случайный юнит</button>
+      <h3>🎲 Спавн брейнрота</h3>
       <select id="custom-unit-name">
         <option>Br Br Patapim</option>
         <option>Bandito Bobrito</option>
         <option>Bombandiro Crocodilo</option>
         <option>Cocofanto Elefanto</option>
-        <option>Te Te Te Sahur</option>
+        <option>Te Te Sahur</option>
         <option>Tralalelo Tralala</option>
         <option>Matteo</option>
         <option>Mythico Dragono</option>
         <option>Tung Tung Sahur</option>
-        <option>Zebra Tacos</option>
-        <option>Lili Larira</option>
-        <option>Tripi Tropa</option>
-        <option>Svinino Bombandiro</option>
-        <option>Orcalelo Orcala</option>
-        <option>Barelina Capuchina</option>
+        <option>Spaghetti Toileti</option>
         <option>Los Tungtungtunos</option>
         <option>Los Combinasion</option>
-        <option>Skeletini Fright</option>
-        <option>Spaghetti Toileti</option>
+        <option>Lili Lalira</option>
+        <option>Svinino Bombandiro</option>
+        <option>La Vacca Saturno Saturnita</option>
+        <option>Zebra Tacos</option>
+        <option>Taco Gav</option>
+        <option>Orcalelo Orcalala</option>
+        <option>Toxic Zombie</option>
       </select><br>
-      <label><input type="checkbox" id="mutate-fire"> 🔥 Fire</label>
-      <label><input type="checkbox" id="mutate-taco"> 🌮 Taco</label>
-      <label><input type="checkbox" id="mutate-halloween"> 🎃 Halloween</label><br>
-      <button onclick="spawnCustomUnit()">Спавн выбранного</button>
+      <button class="action-button" onclick="spawnCustomUnit()">Спавн</button>
     </div>
     <div class="admin-section">
-      <h3>🧪 Отладка</h3>
-      <button onclick="clearSave()">Очистить сохранение</button>
-      <button onclick="forceSlot()">+1 слот вручную</button>
-      <button onclick="forceBoost()">×1.5 бонус на 60 сек</button>
+      <h3>🔥 Запуск ивента</h3>
+      <button class="action-button" onclick="startFireEvent()">Fire</button>
+      <button class="action-button" onclick="startTimeBrainrotEvent()">Time Brainrot</button>
+      <button class="action-button" onclick="startTacoEvent()">Taco</button>
+      <button class="action-button" onclick="startHalloweenEvent()">Halloween</button>
+    </div>
+    <div class="admin-section">
+      <h3>🔁 Перерождение</h3>
+      <button class="action-button" onclick="tryRebirth()">Принудительное перерождение</button>
+    </div>
+    <div class="admin-section">
+      <h3>🧹 Ручной вайп</h3>
+      <button class="action-button" onclick="manualWipe()">Удалить аккаунт</button>
     </div>
   </div>
-    </div>
-    <script>
+</div>
+
+<script>
+function manualWipe() {
+  if (confirm("Вы точно хотите удалить весь прогресс?")) {
+    localStorage.clear();
+    location.reload();
+  }
+}
+</script>
+<script>
 let balance = 200;
-let baseSlots = Array(8).fill(null);
 let rebirthLevel = 0;
-let conveyorBusy = false;
-let currentUnit = null;
-let pendingSellIndex = null;
-let tacoSpawnCounter = 0;
+let baseSlots = Array(8).fill(null);
+
+let fireTimer = 450;
+let brainrotTimer = 400;
+let tacoTimer = 800;
+let halloweenTimer = 1500;
+
 let fireActive = false;
 let timeBrainrotActive = false;
 let tacoActive = false;
 let halloweenActive = false;
-let halloweenCountdown = 1800;
-let halloweenRemaining = 0;
+let tacoUnitCounter = 0;
+let totalTacoUnits = 0;
+let toxicZombieSpawned = false;
 
-const units = {
-  "Br Br Patapim": { income: 10, cost: 100, chance: 0.30, rarity: "common" },
-  "Bandito Bobrito": { income: 25, cost: 2700, chance: 0.12, rarity: "rare" },
-  "Bombandiro Crocodilo": { income: 20, cost: 700, chance: 0.018, rarity: "rare" },
-  "Cocofanto Elefanto": { income: 50, cost: 4000, chance: 0.06, rarity: "legendary" },
-  "Te Te Te Sahur": { income: 40, cost: 3000, chance: 0.06, rarity: "rare" },
-  "Tralalelo Tralala": { income: 500, cost: 150000, chance: 0.02, rarity: "legendary" },
-  "Matteo": { income: 120, cost: 20000, chance: 0.03, rarity: "legendary" },
-  "Mythico Dragono": { income: 100, cost: 15000, chance: 0.04, rarity: "mythic" },
-  "Tung Tung Sahur": { income: 2000, cost: 1200000, chance: 0.01, rarity: "mythic" },
-  "Zebra Tacos": { income: 60, cost: 5000, chance: 0.04, rarity: "rare" },
-  "Lili Larira": { income: 20, cost: 500, chance: 0.08, rarity: "common" },
-  "Tripi Tropa": { income: 25, cost: 800, chance: 0.07, rarity: "common" },
-  "Svinino Bombandiro": { income: 30, cost: 1200, chance: 0.06, rarity: "rare" },
-  "Orcalelo Orcala": { income: 300, cost: 50000, chance: 0.015, rarity: "legendary" },
-  "Barelina Capuchina": { income: 300, cost: 50000, chance: 0.015, rarity: "legendary" },
-  "Los Tungtungtunos": { income: 5000, cost: 500000, chance: 0.005, rarity: "secret" },
-  "Los Combinasion": { income: 10000, cost: 1000000, chance: 0.002, rarity: "secret" },
-  "Skeletini Fright": { income: 100, cost: 50000, chance: 0, rarity: "rare" },
-  "Spaghetti Toileti": { income: 3000, cost: 3000000, chance: 0.1, rarity: "secret" }
-};
+let adminUnlocked = false;
 
-function rollConveyorUnit() {
-  if (conveyorBusy) return;
-  conveyorBusy = true;
+function updateBalanceDisplay() {
+  document.getElementById("balance").innerText = `Баланс: ₽${formatMoney(balance)}`;
+}
 
-  let unit;
-  tacoSpawnCounter++;
+function showFullscreenEvent(text) {
+  const div = document.getElementById("fullscreen-event");
+  div.innerText = text;
+  div.style.display = "flex";
+  setTimeout(() => {
+    div.style.display = "none";
+  }, 2000);
+}
 
-  if (halloweenActive && Math.random() < 0.01) {
-    unit = {
-      name: "Skeletini Fright",
-      income: 100,
-      cost: 50000,
-      rarity: "rare",
-      stash: 0
-    };
-  } else if (tacoActive && tacoSpawnCounter % 3 === 0) {
-    unit = {
-      name: "Zebra Tacos",
-      income: 60,
-      cost: 5000,
-      rarity: "rare",
-      stash: 0,
-      tacoMutated: true
-    };
-  } else {
-    let roll = Math.random();
-    let cumulative = 0;
-    for (let name in units) {
-      const u = units[name];
-      cumulative += u.chance;
-      if (roll <= cumulative) {
-        unit = { name, ...u, stash: 0 };
-        break;
-      }
-    }
-    if (!unit) unit = { name: "Br Br Patapim", ...units["Br Br Patapim"], stash: 0 };
-    if (fireActive && Math.random() < 0.8) {
-      unit.income *= 2;
-      unit.fireMutated = true;
-    }
-    if (tacoActive && Math.random() < 0.5) {
-      unit.income *= 2;
-      unit.tacoMutated = true;
-    }
-    if (halloweenActive && Math.random() < 0.2) {
-      unit.income *= 3;
-      unit.halloweenMutated = true;
-    }
+function startFireEvent() {
+  fireActive = true;
+  showFullscreenEvent("🔥 Fire Event активен!");
+  setTimeout(() => fireActive = false, 30000);
+}
+
+function startTimeBrainrotEvent() {
+  timeBrainrotActive = true;
+  showFullscreenEvent("🧠 Time Brainrot активен!");
+  setTimeout(() => timeBrainrotActive = false, 30000);
+}
+
+function startTacoEvent() {
+  tacoActive = true;
+  tacoUnitCounter = 0;
+  totalTacoUnits = 0;
+  showFullscreenEvent("🌮 Taco Event активен!");
+  startTacoRain();
+  setTimeout(() => {
+    tacoActive = false;
+    stopTacoRain();
+  }, 40000);
+}
+
+function startHalloweenEvent() {
+  halloweenActive = true;
+  showFullscreenEvent("🎃 Halloween Event активен!");
+  toxicZombieSpawned = false;
+  setTimeout(() => halloweenActive = false, 60000);
+}
+
+function updateEventTimers() {
+  document.getElementById("fire-timer").innerText = fireTimer;
+  document.getElementById("brainrot-timer").innerText = brainrotTimer;
+  document.getElementById("taco-timer").innerText = tacoTimer;
+  document.getElementById("halloween-timer").innerText = halloweenTimer;
+}
+
+function updateEventStatus() {
+  document.getElementById("fire-status").innerText = `🔥 Fire: ${fireActive ? "ON" : "OFF"}`;
+  document.getElementById("brainrot-status").innerText = `🧠 Time Brainrot: ${timeBrainrotActive ? "ON" : "OFF"}`;
+  document.getElementById("taco-status").innerText = `🌮 Taco: ${tacoActive ? "ON" : "OFF"}`;
+  document.getElementById("halloween-status").innerText = `🎃 Halloween: ${halloweenActive ? "ON" : "OFF"}`;
+}
+
+setInterval(() => {
+  fireTimer--;
+  brainrotTimer--;
+  tacoTimer--;
+  halloweenTimer--;
+
+  if (fireTimer <= 0) {
+    startFireEvent();
+    fireTimer = 450;
+  }
+  if (brainrotTimer <= 0) {
+    startTimeBrainrotEvent();
+    brainrotTimer = 400;
+  }
+  if (tacoTimer <= 0) {
+    startTacoEvent();
+    tacoTimer = 800;
+  }
+  if (halloweenTimer <= 0) {
+    startHalloweenEvent();
+    halloweenTimer = 1500;
   }
 
-  renderConveyorUnit(unit);
+  updateEventTimers();
+  updateEventStatus();
+}, 1000);
+
+function unlockAdmin() {
+  const pass = document.getElementById("admin-password").value;
+  if (pass === "brainrot123") {
+    adminUnlocked = true;
+    document.getElementById("admin-controls").style.display = "block";
+    showFullscreenEvent("🛠 Admin Panel активна");
+  } else {
+    alert("Неверный пароль");
+  }
 }
 
-function renderConveyorUnit(unit) {
-  currentUnit = unit;
-  const conveyorDiv = document.getElementById("conveyor");
-  conveyorDiv.innerHTML = "";
-  const div = document.createElement("div");
-  div.className = `unit ${unit.rarity}`;
-  if (unit.fireMutated) div.classList.add("mutated");
-  if (unit.tacoMutated) div.classList.add("taco");
-  if (unit.halloweenMutated) div.classList.add("halloween");
+function tryRebirth() {
+  const totalIncome = baseSlots.reduce((sum, unit) => sum + (unit?.income || 0), 0);
+  if (totalIncome < 1000) {
+    alert("Нужно минимум 1000 общего дохода для перерождения!");
+    return;
+  }
 
-  let tags = "";
-  if (unit.fireMutated) tags += "🔥 Fire ";
-  if (unit.tacoMutated) tags += "🌮 Taco ";
-  if (unit.halloweenMutated) tags += "🎃 Halloween ";
+  if (!confirm("Вы уверены, что хотите переродиться? Все юниты будут сброшены.")) return;
 
-  div.innerHTML = `<strong>${unit.name} ${tags}</strong><br>
-    ₽${unit.income}/сек<br>Цена: ₽${unit.cost}<br>
-    <button onclick='buyUnit()'>Купить</button>`;
-  conveyorDiv.appendChild(div);
-
-  setTimeout(() => {
-    if (conveyorDiv.contains(div)) {
-      conveyorDiv.innerHTML = "";
-      conveyorBusy = false;
-      rollConveyorUnit();
-    }
-  }, 5000);
-}
-
-function buyUnit() {
-  const unit = currentUnit;
-  if (!unit) return;
-
-  const emptyIndex = baseSlots.findIndex(slot => slot === null);
-  if (emptyIndex === -1) return alert("Нет свободных слотов!");
-  if (balance < unit.cost) return alert("Недостаточно средств!");
-
-  balance -= unit.cost;
-  baseSlots[emptyIndex] = unit;
+  rebirthLevel++;
+  baseSlots = Array(8 + rebirthLevel * 2).fill(null);
+  balance = 200 + rebirthLevel * 100;
+  saveGame();
   updateBalanceDisplay();
   updateBaseDisplay();
   updateSlotCount();
-  saveGame();
-
-  document.getElementById("conveyor").innerHTML = "";
-  conveyorBusy = false;
-  currentUnit = null;
-
-  showMessage(`✅ Куплен брейнрот: ${unit.name}`);
-  rollConveyorUnit();
+  showFullscreenEvent(`🔁 Перерождение ${rebirthLevel} уровня!`);
 }
 
-function sellUnit(index) {
-  const unit = baseSlots[index];
-  if (!unit) return;
-  pendingSellIndex = index;
-  document.getElementById("sell-unit-name").innerText = unit.name;
-  document.getElementById("sell-confirm-popup").style.display = "block";
-  document.getElementById("sell-confirm-overlay").style.display = "block";
+// 🌮 Taco Rain
+let tacoRainInterval = null;
+
+function startTacoRain() {
+  const rainContainer = document.getElementById("taco-rain");
+  tacoRainInterval = setInterval(() => {
+    const taco = document.createElement("div");
+    taco.className = "taco";
+    taco.style.left = Math.random() * 100 + "vw";
+    taco.innerText = "🌮";
+    rainContainer.appendChild(taco);
+    setTimeout(() => taco.remove(), 3000);
+  }, 200);
 }
 
-function confirmSell() {
-  const index = pendingSellIndex;
-  const unit = baseSlots[index];
-  if (unit) {
-    balance += unit.cost;
-    baseSlots[index] = null;
-    updateBalanceDisplay();
-    updateBaseDisplay();
-    saveGame();
-    showMessage(`❌ Продан брейнрот: ${unit.name}`);
+function stopTacoRain() {
+  clearInterval(tacoRainInterval);
+}
+
+// 💥 Мутации с иксами
+function applyMutations(unit) {
+  let multiplier = 1;
+  let mutations = [];
+
+  if (fireActive && Math.random() < 0.8) {
+    mutations.push("🔥 Fire");
+    multiplier *= 2;
   }
-  cancelSell();
-}
 
-function cancelSell() {
-  pendingSellIndex = null;
-  document.getElementById("sell-confirm-popup").style.display = "none";
-  document.getElementById("sell-confirm-overlay").style.display = "none";
+  if (tacoActive && Math.random() < 0.5) {
+    mutations.push("🌮 Taco");
+    multiplier *= 2;
+  }
+
+  if (halloweenActive && !toxicZombieSpawned) {
+    unit.name = "Toxic Zombie";
+    unit.income = 180;
+    unit.cost = 30000;
+    unit.mutation = "☣️ Toxic";
+    toxicZombieSpawned = true;
+    return unit;
+  }
+
+  if (halloweenActive && Math.random() < 0.2) {
+    mutations.push("🎃 Halloween");
+    multiplier *= 3;
+  }
+
+  if (mutations.length > 0) {
+    unit.mutation = mutations.join(" + ");
+    unit.income *= multiplier;
+  }
+
+  return unit;
 }
-    </script>
+</script>
   <script>
-let fireCountdown = 150;
-let fireRemaining = 0;
-let timeBrainrotCountdown = 300;
-let timeBrainrotRemaining = 0;
-let tacoCountdown = 900;
-let tacoRemaining = 0;
-
-function updateBalanceDisplay() {
-  document.getElementById("balance").innerText = `Баланс: ₽${Math.floor(balance)}`;
-}
-
-function updateSlotCount() {
-  document.getElementById("slot-count").innerText = baseSlots.length;
-}
-
 function updateBaseDisplay() {
   const baseDiv = document.getElementById("base");
   baseDiv.innerHTML = "";
   baseSlots.forEach((unit, i) => {
     const div = document.createElement("div");
-    div.className = `slot ${unit?.rarity || ""}`;
+    div.className = "slot";
     if (unit) {
-      if (unit.fireMutated) div.classList.add("mutated");
-      if (unit.tacoMutated) div.classList.add("taco");
-      if (unit.halloweenMutated) div.classList.add("halloween");
-
-      let tags = "";
-      if (unit.fireMutated) tags += "🔥 ";
-      if (unit.tacoMutated) tags += "🌮 ";
-      if (unit.halloweenMutated) tags += "🎃 ";
-
       let multiplier = timeBrainrotActive ? 1.5 : 1;
-      let incomeDisplay = `₽${Math.floor(unit.income * multiplier)}/сек`;
+      let incomeDisplay = `₽${formatMoney(unit.income * multiplier)}/сек`;
       let bonusText = timeBrainrotActive ? "<span style='color:#27ae60;'>×1.5 бонус</span><br>" : "";
+      let mutationText = unit.mutation ? `<span style='color:#e74c3c;'>${unit.mutation}</span><br>` : "";
 
-      div.innerHTML = `<strong>${unit.name} ${tags}</strong><br>
-        ${bonusText}${incomeDisplay}<br>
-        Копилка: ₽${Math.floor(unit.stash || 0)}<br>
-        <button onclick="collect(${i})">Забрать</button><br>
-        <button onclick="sellUnit(${i})">Продать</button>`;
+      if (unit.name === "Lucky Block") {
+        div.innerHTML = `<strong>🎁 Lucky Block</strong><br>
+          <span style="font-size:16px;">Открыть для случайного брейнрота</span><br><br>
+          <button class="action-button" onclick="openLuckyBlock(${i})">Открыть</button>`;
+      } else {
+        div.innerHTML = `<strong>${unit.name}</strong><br>
+          ${mutationText}${bonusText}${incomeDisplay}<br>
+          Копилка: ₽${formatMoney(unit.stash || 0)}<br>
+          <button class="action-button collect-button" onclick="collect(${i})">Забрать</button>
+          <button class="action-button sell-button" onclick="sellUnit(${i})">Продать</button>`;
+      }
     } else {
       div.innerText = "Пусто";
     }
@@ -528,20 +522,9 @@ function updateBaseDisplay() {
   });
 }
 
-function collect(index) {
-  const unit = baseSlots[index];
-  if (unit && unit.stash > 0) {
-    balance += unit.stash;
-    unit.stash = 0;
-    updateBalanceDisplay();
-    updateBaseDisplay();
-    saveGame();
-  }
-}
-
 setInterval(() => {
   baseSlots.forEach(unit => {
-    if (unit) {
+    if (unit && unit.name !== "Lucky Block") {
       const multiplier = timeBrainrotActive ? 1.5 : 1;
       unit.stash = (unit.stash || 0) + unit.income * multiplier;
     }
@@ -549,91 +532,8 @@ setInterval(() => {
   updateBaseDisplay();
 }, 1000);
 
-setInterval(() => {
-  fireCountdown--;
-  timeBrainrotCountdown--;
-  tacoCountdown--;
-  halloweenCountdown--;
-
-  if (fireCountdown <= 0 && !fireActive) {
-    startFireEvent();
-    fireCountdown = 150;
-  }
-  if (timeBrainrotCountdown <= 0 && !timeBrainrotActive) {
-    startTimeBrainrotEvent();
-    timeBrainrotCountdown = 300;
-  }
-  if (tacoCountdown <= 0 && !tacoActive) {
-    startTacoEvent();
-    tacoCountdown = 900;
-  }
-  if (halloweenCountdown <= 0 && !halloweenActive) {
-    startHalloweenEvent();
-    halloweenCountdown = 1800;
-  }
-
-  if (fireActive && --fireRemaining <= 0) fireActive = false;
-  if (timeBrainrotActive && --timeBrainrotRemaining <= 0) timeBrainrotActive = false;
-  if (tacoActive && --tacoRemaining <= 0) tacoActive = false;
-  if (halloweenActive && --halloweenRemaining <= 0) halloweenActive = false;
-
-  updateEventTimer();
-  updateTimeBrainrotTimer();
-  updateTacoTimer();
-  updateHalloweenTimer();
-  updateActiveEventsDisplay();
-}, 1000);
-
-function updateEventTimer() {
-  document.getElementById("event-timer").innerText = fireActive
-    ? `🔥 Fire Event активен (${fireRemaining} сек)`
-    : `Следующий Fire Event через: ${fireCountdown} сек`;
-}
-
-function updateTimeBrainrotTimer() {
-  document.getElementById("timebrainrot-timer").innerText = timeBrainrotActive
-    ? `🧠 Time Brainrot активен (${timeBrainrotRemaining} сек)`
-    : `До следующего Time Brainrot Event: ${timeBrainrotCountdown} сек`;
-}
-
-function updateTacoTimer() {
-  document.getElementById("taco-timer").innerText = tacoActive
-    ? `🌮 Taco Event активен (${tacoRemaining} сек)`
-    : `Следующий Taco Event через: ${tacoCountdown} сек`;
-}
-
-function updateHalloweenTimer() {
-  document.getElementById("halloween-timer").innerText = halloweenActive
-    ? `🎃 Halloween Event активен (${halloweenRemaining} сек)`
-    : `Следующий Halloween Event через: ${halloweenCountdown} сек`;
-}
-
-function updateActiveEventsDisplay() {
-  const el = document.getElementById("active-events");
-  let active = [];
-  if (fireActive) active.push("🔥 Fire");
-  if (timeBrainrotActive) active.push("🧠 Time Brainrot");
-  if (tacoActive) active.push("🌮 Taco");
-  if (halloweenActive) active.push("🎃 Halloween");
-  el.innerText = "Активные события: " + (active.length ? active.join(", ") : "—");
-}
-
-function showFullscreenEvent(text) {
-  const screen = document.getElementById("fullscreen-event");
-  if (!screen) {
-    const div = document.createElement("div");
-    div.id = "fullscreen-event";
-    div.style = "position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);color:#fff;font-size:48px;font-weight:bold;display:flex;align-items:center;justify-content:center;z-index:9999;";
-    div.innerText = text;
-    document.body.appendChild(div);
-    setTimeout(() => div.remove(), 2000);
-  } else {
-    screen.innerText = text;
-    screen.style.display = "flex";
-    setTimeout(() => {
-      screen.style.display = "none";
-    }, 2000);
-  }
+function updateSlotCount() {
+  document.getElementById("slot-count").innerText = baseSlots.length;
 }
 
 function saveGame() {
@@ -653,125 +553,276 @@ function loadGame() {
     rebirthLevel = data.rebirthLevel || 0;
   }
 }
-  </script>
-<script>
-function startFireEvent() {
-  fireActive = true;
-  fireRemaining = 20;
-  showFullscreenEvent("🔥 Fire Event!");
-}
 
-function startTimeBrainrotEvent() {
-  timeBrainrotActive = true;
-  timeBrainrotRemaining = 30;
-  showFullscreenEvent("🧠 Time Brainrot!");
-}
-
-function startTacoEvent() {
-  tacoActive = true;
-  tacoRemaining = 60;
-  tacoSpawnCounter = 0;
-  showFullscreenEvent("🌮 Loren любит Taco!");
-}
-
-function startHalloweenEvent() {
-  halloweenActive = true;
-  halloweenRemaining = 45;
-  showFullscreenEvent("🎃 Halloween Event!");
-}
-
-function spawnCustomUnit() {
-  const name = document.getElementById("custom-unit-name").value;
-  const fire = document.getElementById("mutate-fire").checked;
-  const taco = document.getElementById("mutate-taco").checked;
-  const halloween = document.getElementById("mutate-halloween").checked;
-  const u = units[name];
-  if (!u) return alert("Юнит не найден");
-
-  const unit = {
-    name,
-    income: u.income,
-    cost: u.cost,
-    rarity: u.rarity,
-    stash: 0,
-    fireMutated: fire,
-    tacoMutated: taco,
-    halloweenMutated: halloween
-  };
-  if (fire) unit.income *= 2;
-  if (taco) unit.income *= 2;
-  if (halloween) unit.income *= 3;
-
-  renderConveyorUnit(unit);
-}
-
-function unlockAdmin() {
-  const input = document.getElementById("admin-password").value;
-  if (input === "brainrot0192") {
-    document.getElementById("admin-controls").style.display = "block";
-    showMessage("🔓 Админка разблокирована");
-  } else {
-    alert("❌ Неверный пароль");
-  }
-}
-
-function clearSave() {
-  localStorage.removeItem("brainrotSave");
-  alert("🧹 Сохранение очищено. Перезагрузите страницу.");
-}
-
-function forceSlot() {
-  baseSlots.push(null);
-  updateSlotCount();
+function collect(index) {
+  const unit = baseSlots[index];
+  if (!unit || unit.name === "Lucky Block") return;
+  balance += unit.stash || 0;
+  unit.stash = 0;
+  updateBalanceDisplay();
   updateBaseDisplay();
   saveGame();
 }
 
-function forceBoost() {
-  timeBrainrotActive = true;
-  timeBrainrotRemaining = 60;
-  showFullscreenEvent("⚡ Бонус ×1.5 активирован!");
+function sellUnit(index) {
+  const unit = baseSlots[index];
+  if (!unit) return;
+  document.getElementById("sell-unit-name").innerText = unit.name;
+  document.getElementById("sell-confirm-overlay").style.display = "block";
+  document.getElementById("sell-confirm-popup").style.display = "block";
+  window.pendingSellIndex = index;
 }
 
-function showMessage(text) {
-  const log = document.getElementById("message-log");
-  log.innerText = text;
-  setTimeout(() => {
-    log.innerText = "";
-  }, 4000);
-}
-
-function tryRebirth() {
-  if (rebirthLevel === 0) {
-    let hasBandito = baseSlots.some(u => u?.name === "Bandito Bobrito");
-    let hasBombandiro = baseSlots.some(u => u?.name === "Bombandiro Crocodilo");
-    if (balance >= 25000 && hasBandito && hasBombandiro) {
-      performRebirth(1, 500);
-    } else {
-      alert("❌ Условия не выполнены:\n• 25 000₽\n• Bandito Bobrito\n• Bombandiro Crocodilo");
-    }
-  } else if (rebirthLevel === 1) {
-    let hasCocofanto = baseSlots.some(u => u?.name === "Cocofanto Elefanto");
-    let hasZebra = baseSlots.some(u => u?.name === "Zebra Tacos");
-    if (balance >= 100000 && hasCocofanto && hasZebra) {
-      performRebirth(2, 2000);
-    } else {
-      alert("❌ Условия не выполнены:\n• 100 000₽\n• Cocofanto Elefanto\n• Zebra Tacos");
-    }
-  } else {
-    alert("🔒 Максимальный уровень перерождения достигнут.");
+function confirmSell() {
+  const index = window.pendingSellIndex;
+  const unit = baseSlots[index];
+  if (!unit) return;
+  if (unit.name !== "Lucky Block") {
+    balance += Math.floor(unit.cost * 0.5);
   }
-}
-
-function performRebirth(nextLevel, reward) {
-  rebirthLevel = nextLevel;
-  balance = reward;
-  baseSlots = Array(baseSlots.length + 1).fill(null);
+  baseSlots[index] = null;
   updateBalanceDisplay();
   updateBaseDisplay();
   updateSlotCount();
   saveGame();
-  showFullscreenEvent(`🔁 Перерождение ${nextLevel} выполнено!`);
+  cancelSell();
+}
+
+function cancelSell() {
+  document.getElementById("sell-confirm-overlay").style.display = "none";
+  document.getElementById("sell-confirm-popup").style.display = "none";
+  window.pendingSellIndex = null;
+}
+
+// 🎁 Открытие Lucky Block на базе
+function openLuckyBlock(index) {
+  const unit = baseSlots[index];
+  if (!unit || unit.name !== "Lucky Block") return;
+
+  baseSlots[index] = {
+    name: "❓❓❓",
+    income: 0,
+    cost: 0,
+    stash: 0
+  };
+  updateBaseDisplay();
+
+  setTimeout(() => {
+    const roll = Math.random();
+    let name = "Bandito Bobrito";
+    if (roll < 0.03) name = "Spaghetti Toileti";
+    else if (roll < 0.18) name = "Los Combinasion";
+    else if (roll < 0.20) name = "Los Tungtungtunos";
+    else if (roll < 0.65) name = "Orcalelo Orcalala";
+
+    const base = units[name];
+    baseSlots[index] = applyMutations({
+      name,
+      income: base.income,
+      cost: base.cost,
+      stash: 0
+    });
+
+    showFullscreenEvent(`🎁 Lucky Block: ${name}`);
+    updateBaseDisplay();
+    updateSlotCount();
+    saveGame();
+  }, 1000);
+}
+  </script>
+<script>
+let conveyorBusy = false;
+let currentUnit = null;
+
+const units = {
+  "Br Br Patapim":        { income: 10, cost: 100, chance: 0.40 },
+  "Bandito Bobrito":      { income: 25, cost: 2700, chance: 0.40 },
+  "Bombandiro Crocodilo": { income: 20, cost: 700, chance: 0.40 },
+  "Cocofanto Elefanto":   { income: 50, cost: 4000, chance: 0.35 },
+  "Te Te Sahur":          { income: 40, cost: 3000, chance: 0.35 },
+  "Tralalelo Tralala":    { income: 500, cost: 150000, chance: 0.20 },
+  "Matteo":               { income: 120, cost: 20000, chance: 0.30 },
+  "Mythico Dragono":      { income: 100, cost: 15000, chance: 0.25 },
+  "Tung Tung Sahur":      { income: 2000, cost: 1200000, chance: 0.15 },
+  "Spaghetti Toileti":    { income: 150, cost: 25000, chance: 0.03 },
+  "Los Tungtungtunos":    { income: 3000, cost: 50000, chance: 0.02 },
+  "Los Combinasion":      { income: 6000, cost: 100000, chance: 0.01 },
+  "Lili Lalira":          { income: 20, cost: 500, chance: 0.35 },
+  "Svinino Bombandiro":   { income: 20, cost: 500, chance: 0.35 },
+  "La Vacca Saturno Saturnita": { income: 5000000, cost: 300000000, chance: 0 },
+  "Zebra Tacos":          { income: 60, cost: 5000, chance: 0 },
+  "Taco Gav":             { income: 90, cost: 11000, chance: 0 },
+  "Orcalelo Orcalala":    { income: 70, cost: 8000, chance: 0 },
+  "Toxic Zombie":         { income: 180, cost: 30000, chance: 0 }
+};
+
+function rollConveyorUnit() {
+  if (conveyorBusy) return;
+  conveyorBusy = true;
+
+  if (Math.random() < 0.15) {
+    renderLuckyBlock();
+    return;
+  }
+
+  let selected = null;
+
+  if (tacoActive) {
+    totalTacoUnits++;
+    if (totalTacoUnits % 15 === 0) selected = "Taco Gav";
+    else if (totalTacoUnits % 5 === 0) selected = "Zebra Tacos";
+  }
+
+  if (!selected) {
+    let roll = Math.random();
+    for (let name in units) {
+      const unit = units[name];
+      if (unit.chance && roll <= unit.chance) {
+        selected = name;
+        break;
+      }
+      roll -= unit.chance || 0;
+    }
+  }
+
+  if (!selected) selected = "Br Br Patapim";
+  const base = units[selected];
+
+  let unit = {
+    name: selected,
+    income: base.income,
+    cost: base.cost,
+    stash: 0
+  };
+
+  unit = applyMutations(unit);
+  renderConveyorUnit(unit);
+}
+
+function renderConveyorUnit(unit) {
+  currentUnit = unit;
+  const conveyorDiv = document.getElementById("conveyor");
+  conveyorDiv.innerHTML = "";
+
+  const div = document.createElement("div");
+  div.className = "unit";
+  const mutationText = unit.mutation ? `<span style='color:#e74c3c;'>${unit.mutation}</span><br>` : "";
+
+  div.innerHTML = `
+    <strong style="font-size:18px;">${unit.name}</strong><br>
+    ${mutationText}
+    <span style="font-size:16px;">₽${formatMoney(unit.income)}/сек</span><br>
+    <span style="color:#999;">Цена: ₽${formatMoney(unit.cost)}</span><br><br>
+    <button class="action-button" onclick='buyUnit()'>Купить</button>
+  `;
+
+  conveyorDiv.appendChild(div);
+
+  setTimeout(() => {
+    if (conveyorDiv.contains(div)) {
+      conveyorDiv.innerHTML = "";
+      conveyorBusy = false;
+      rollConveyorUnit();
+    }
+  }, 7000);
+}
+
+function renderLuckyBlock() {
+  currentUnit = { name: "Lucky Block", cost: 500000 };
+  const conveyorDiv = document.getElementById("conveyor");
+  conveyorDiv.innerHTML = "";
+
+  const div = document.createElement("div");
+  div.className = "unit";
+  div.innerHTML = `
+    <strong style="font-size:18px;">🎁 Lucky Block</strong><br>
+    <span style="font-size:16px;">Случайный брейнрот</span><br>
+    <span style="color:#999;">Цена: ₽${formatMoney(500000)}</span><br><br>
+    <button class="action-button" onclick='buyLuckyBlock()'>Открыть</button>
+  `;
+
+  conveyorDiv.appendChild(div);
+
+  setTimeout(() => {
+    if (conveyorDiv.contains(div)) {
+      conveyorDiv.innerHTML = "";
+      conveyorBusy = false;
+      rollConveyorUnit();
+    }
+  }, 7000);
+}
+
+function buyUnit() {
+  const unit = currentUnit;
+  if (!unit) return;
+
+  const emptyIndex = baseSlots.findIndex(slot => slot === null);
+  if (emptyIndex === -1) return alert("Нет свободных слотов!");
+  if (balance < unit.cost) return alert("Недостаточно средств!");
+
+  balance -= unit.cost;
+  baseSlots[emptyIndex] = unit;
+
+  updateBalanceDisplay();
+  updateBaseDisplay();
+  updateSlotCount();
+  saveGame();
+
+  document.getElementById("conveyor").innerHTML = "";
+  conveyorBusy = false;
+  currentUnit = null;
+
+  rollConveyorUnit();
+}
+
+function buyLuckyBlock() {
+  if (balance < 500000) return alert("Недостаточно средств!");
+  const emptyIndex = baseSlots.findIndex(slot => slot === null);
+  if (emptyIndex === -1) return alert("Нет свободных слотов!");
+
+  balance -= 500000;
+  baseSlots[emptyIndex] = {
+    name: "Lucky Block",
+    income: 0,
+    cost: 500000,
+    stash: 0
+  };
+
+  updateBalanceDisplay();
+  updateBaseDisplay();
+  updateSlotCount();
+  saveGame();
+
+  document.getElementById("conveyor").innerHTML = "";
+  conveyorBusy = false;
+  currentUnit = null;
+
+  rollConveyorUnit();
+}
+
+function spawnCustomUnit() {
+  if (!adminUnlocked) return alert("Нужен доступ к админке!");
+  const name = document.getElementById("custom-unit-name").value;
+  const base = units[name];
+  if (!base) return;
+
+  let unit = {
+    name,
+    income: base.income,
+    cost: base.cost,
+    stash: 0
+  };
+
+  unit = applyMutations(unit);
+
+  const emptyIndex = baseSlots.findIndex(slot => slot === null);
+  if (emptyIndex === -1) return alert("Нет свободных слотов!");
+
+  baseSlots[emptyIndex] = unit;
+  updateBaseDisplay();
+  updateSlotCount();
+  saveGame();
+  showFullscreenEvent(`🧠 Спавн: ${unit.name}`);
 }
 
 // запуск
@@ -779,17 +830,9 @@ loadGame();
 updateBalanceDisplay();
 updateBaseDisplay();
 updateSlotCount();
-updateEventTimer();
-updateTimeBrainrotTimer();
-updateTacoTimer();
-updateHalloweenTimer();
-updateActiveEventsDisplay();
+updateEventTimers();
+updateEventStatus();
 rollConveyorUnit();
-
-// скрытие загрузочного экрана
-setTimeout(() => {
-  document.getElementById("loading-screen").style.display = "none";
-}, 3000);
 </script>
 </body>
 </html>
