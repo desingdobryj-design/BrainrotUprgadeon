@@ -131,9 +131,9 @@
 
 <div id="fullscreen-event"></div>
 <h1>🧠 Brainrot Upgrade</h1>
-<div id="timebrainrot-timer">До следующего Time Brainrot Event: 90 сек</div>
-<div id="event-timer">Следующий Fire Event через: 45 сек</div>
-<div id="taco-timer">Следующий Taco Event через: 600 сек</div>
+<div id="timebrainrot-timer">До следующего Time Brainrot Event: 300 сек</div>
+<div id="event-timer">Следующий Fire Event через: 150 сек</div>
+<div id="taco-timer">Следующий Taco Event через: 900 сек</div>
 <div id="balance">Баланс: ₽0</div>
 <div id="active-events">Активные события: —</div>
 
@@ -156,17 +156,17 @@
     <button onclick="startTacoEvent()">🌮 Запустить Taco Event</button>
     <button onclick="rollConveyorUnit()">🚀 Спавн юнита</button>
   </div>
-</div>
-<script>
+  </div>
+  <script>
 let balance = 200;
 let baseSlots = Array(8).fill(null);
-let fireCountdown = 45;
+let fireCountdown = 150;
 let fireRemaining = 0;
 let fireActive = false;
-let timeBrainrotCountdown = 90;
+let timeBrainrotCountdown = 300;
 let timeBrainrotRemaining = 0;
 let timeBrainrotActive = false;
-let tacoCountdown = 600;
+let tacoCountdown = 900;
 let tacoRemaining = 0;
 let tacoActive = false;
 let conveyorBusy = false;
@@ -218,14 +218,14 @@ function updateActiveEventsDisplay() {
 
 function startFireEvent() {
   fireActive = true;
-  fireRemaining = 30;
+  fireRemaining = 20;
   showFullscreenEvent("🔥 Fire Event!");
   updateActiveEventsDisplay();
 }
 
 function startTimeBrainrotEvent() {
   timeBrainrotActive = true;
-  timeBrainrotRemaining = 40;
+  timeBrainrotRemaining = 30;
   showFullscreenEvent("🧠 Time Brainrot!");
   updateActiveEventsDisplay();
 }
@@ -343,8 +343,8 @@ function showMessage(text) {
     log.innerText = "";
   }, 4000);
 }
-</script>
-<script>
+  </script>
+  <script>
 function updateBaseDisplay() {
   const baseDiv = document.getElementById("base");
   baseDiv.innerHTML = "";
@@ -415,15 +415,15 @@ setInterval(() => {
 
   if (fireCountdown <= 0 && !fireActive) {
     startFireEvent();
-    fireCountdown = 45;
+    fireCountdown = 150;
   }
   if (timeBrainrotCountdown <= 0 && !timeBrainrotActive) {
     startTimeBrainrotEvent();
-    timeBrainrotCountdown = 90;
+    timeBrainrotCountdown = 300;
   }
   if (tacoCountdown <= 0 && !tacoActive) {
     startTacoEvent();
-    tacoCountdown = 600;
+    tacoCountdown = 900;
   }
 
   if (fireActive) {
@@ -463,7 +463,7 @@ function loadGame() {
 
 function unlockAdmin() {
   const input = document.getElementById("admin-password").value;
-  if (input === "01920192") {
+  if (input === "brainrot0192") {
     document.getElementById("admin-controls").style.display = "block";
   } else {
     alert("Неверный пароль");
